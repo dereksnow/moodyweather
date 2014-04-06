@@ -1,0 +1,29 @@
+<head>
+  <title>MoodyWeather</title>
+</head>
+
+<body>
+</body>
+
+<template name="location">
+  <div class="container text-center">
+    <h1>Your Location?</h1>
+      <form class="form-compact">
+        <input type="text" id="locationText" placeholder="zip code">
+        <input type="button" id="locationSubmit" class="btn" value="Submit">
+      </form> 
+  </div>
+</template>
+
+<template name="weatherInfo">
+  <div class="container text-center">
+      Location {{ data.location }}<br/>
+      {{data.description}}<br/>
+      Current Temp {{ data.tempCurr }} F<br/>
+      High Temp {{ data.tempHi }} F<br/>
+      Low Temp {{ data.tempLow }} F<br/>
+      Humidty {{ data.humidity }} %<br/>
+      Wind Speed {{ data.windSpeed }} Miles/Hr<br/>
+      <a href="{{pathFor 'location'}}">Enter a new Location</a>
+  </div>
+</template>
