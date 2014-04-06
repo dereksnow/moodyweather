@@ -1,5 +1,17 @@
 if (Meteor.isClient) {
 
+  // A version of Session that also store the key/value pair to local storage
+  // using Amplify
+  var AmplifiedSession = _.extend({}, Session, {
+    keys: _.object(_.map(amplify.store(), function (value, key) {
+      return [key, JSON.stringify(value)];
+    })),
+    set: function (key, value) {
+      Session.set.apply(this, arguments);
+      amplify.store(key, value);
+    }
+  });
+
   // map openweathermap icon names returned from json to icomoon names
   function getWeatherGlyphColor(icon) {
     weatherGlyph = {
@@ -27,13 +39,13 @@ if (Meteor.isClient) {
 
   var weather = {};
 
-  Template.location.events({
+  Template.home.events({
     'click #locationSubmit': function (evt, temp) {
       var location = temp.find('#locationText').value;
       var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial';
       var weatherData = $.getJSON(url, function( data ){
         var gylphColor = getWeatherGlyphColor(data.weather[0].icon);
-        weather['icon'] = gylphColor['glyph'];
+        weather['icon'] = "icon-" + gylphColor['glyph'];
         weather['color'] = gylphColor['color'];
         weather['location'] = data.name;   
         weather['description'] = data.weather[0].description;       
@@ -43,16 +55,16 @@ if (Meteor.isClient) {
         weather['humidity'] = data.main.humidity;
         weather['windSpeed'] = data.wind.speed;
         weather['windDir'] = data.wind.deg;
-        Session.set('weatherData', weather);
-        Router.go('weatherInfo');
+        AmplifiedSession.set('weatherData', weather);
+        Router.go('wInfo');
       }).fail(function() {
           alert("error");
         });      
     }
   });
 
-  Template.weatherInfo.data = function() {
-    return Session.get('weatherData')
+  Template.wInfo.data = function() {
+    return AmplifiedSession.get('weatherData')
   }
 }
 

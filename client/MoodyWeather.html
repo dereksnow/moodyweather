@@ -1,11 +1,12 @@
 <head>
   <title>MoodyWeather</title>
+  <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
 </body>
 
-<template name="location">
+<template name="home">
   <div class="container text-center">
     <h1>Your Location?</h1>
       <form class="form-compact">
@@ -15,15 +16,33 @@
   </div>
 </template>
 
-<template name="weatherInfo">
+<template name="wInfo">
   <div class="container text-center">
-      Location {{ data.location }}<br/>
-      {{data.description}}<br/>
-      Current Temp {{ data.tempCurr }} F<br/>
-      High Temp {{ data.tempHi }} F<br/>
-      Low Temp {{ data.tempLow }} F<br/>
-      Humidty {{ data.humidity }} %<br/>
-      Wind Speed {{ data.windSpeed }} Miles/Hr<br/>
-      <a href="{{pathFor 'location'}}">Enter a new Location</a>
+      
+      <div class="row">
+        <i class="{{data.icon}} icon-md"></i>
+      </div>
+      <div class="row">
+        Location {{ data.location }}
+      </div>
+      <div class="row description">
+        {{data.description}}
+      </div>
+      <div class="row">
+        Current Temp {{ data.tempCurr }}
+      </div>
+      <div class="row">
+        High Temp {{ data.tempHi }}
+      </div>  
+      <div class="row">
+        Low Temp {{ data.tempLow }}
+      </div>
+      <div class="row">
+        Humidty {{ data.humidity }} %
+      </div>
+      <div class="row">
+        Wind Speed {{ data.windSpeed }} miles/hr
+      </div>                             
+      <a href="{{pathFor 'home'}}">Enter a new Location</a>
   </div>
 </template>
