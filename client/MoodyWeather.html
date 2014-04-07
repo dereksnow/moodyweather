@@ -1,48 +1,73 @@
 <head>
   <title>MoodyWeather</title>
-  <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
 </body>
 
 <template name="home">
-  <div class="container text-center">
-    <h1>Your Location?</h1>
-      <form class="form-compact">
-        <input type="text" id="locationText" placeholder="zip code">
-        <input type="button" id="locationSubmit" class="btn" value="Submit">
-      </form> 
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 text-center">
+        <h1>Enter Your Location for Weather Info</h1>
+          <form class="form-inline" role="form">
+            <div class="form-group">
+              <label class="sr-only" for="locationText">Location</label>
+              <input type="text" class="form-control input-lg" id="locationText" size="43" placeholder="zip code (e.g. 33050) OR city,country (e.g. Perth,AU)">
+              <input type="button" id="locationSubmit" class="btn btn-default btn-lg" value="Submit">              
+            </div>
+
+            
+          </form>
+      </div>
+    </div> 
   </div>
 </template>
 
 <template name="wInfo">
-  <div class="container text-center">
-      
-      <div class="row">
-        <i class="{{data.icon}} icon-md"></i>
+  <div class="container text-center weather-info">    
+    <div class="row">
+      <i class="{{data.icon}} icon-md"></i>
+    </div>
+    <div class="row">
+      {{ data.location }}
+    </div>      
+    <div class="row description">
+      {{data.description}}
+    </div>
+    <div class="row">
+      Current Temp
       </div>
-      <div class="row">
-        Location {{ data.location }}
+    <div class="row large-emphasis">
+      {{ data.tempCurr }} &deg;F
+    </div>      
+    <div class="row">
+      <div class="col-md-2 col-md-offset-4">
+        <div class="row">
+          High Temp
+        </div>
+        <div class="row">
+          {{ data.tempHi }} &deg;F
+        </div>
       </div>
-      <div class="row description">
-        {{data.description}}
-      </div>
-      <div class="row">
-        Current Temp {{ data.tempCurr }}
-      </div>
-      <div class="row">
-        High Temp {{ data.tempHi }}
-      </div>  
-      <div class="row">
-        Low Temp {{ data.tempLow }}
-      </div>
-      <div class="row">
-        Humidty {{ data.humidity }} %
-      </div>
-      <div class="row">
-        Wind Speed {{ data.windSpeed }} miles/hr
-      </div>                             
-      <a href="{{pathFor 'home'}}">Enter a new Location</a>
+      <div class="col-md-2">
+        <div class="row">
+          Low Temp
+        </div>
+        <div class="row">
+          {{ data.tempLow }} &deg;F
+        </div>
+      </div>             
+    </div>
+    <div class="row">
+      Humidty {{ data.humidity }} %
+    </div>
+    <div class="row">
+      Wind Speed {{ data.windSpeed }} miles/hr
+    </div>
+    <div class="row">                          
+    <a href="{{pathFor 'home'}}" class="btn btn-default col-md-4 col-md-offset-4 btn-lg">Enter a new Location</a>
+  </div>
   </div>
 </template>

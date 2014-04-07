@@ -15,25 +15,25 @@ if (Meteor.isClient) {
   // map openweathermap icon names returned from json to icomoon names
   function getWeatherGlyphColor(icon) {
     weatherGlyph = {
-      "01d": { "glyph": "sun", "color": "FF834B" },
-      "01n": { "glyph": "moon", "color": "3D62FF" },
-      "02d": { "glyph": "cloudy", "color": "B7D6FF" },
-      "02n": { "glyph": "cloud", "color": "9FBADE" },
-      "03d": { "glyph": "cloud2", "color": "7CC1FF" },
-      "03n": { "glyph": "cloud2", "color": "639ACC" },
-      "04d": { "glyph": "cloudy2", "color": "5AB4FF" },
-      "04n": { "glyph": "cloudy2", "color": "4385BD" },
-      "09d": { "glyph": "rainy", "color": "4095FF" },
-      "09n": { "glyph": "rainy", "color": "2C67B0" },
-      "10d": { "glyph": "rainy2", "color": "3676FF" },
-      "10n": { "glyph": "rainy2", "color": "244FAB" },
-      "11d": { "glyph": "lightning3", "color": "6E7081" },
-      "11n": { "glyph": "lightning3", "color": "50525E" },
-      "13d": { "glyph": "snowy3", "color": "A2E0FF" },
-      "13n": { "glyph": "snowy3", "color": "82B3CC" },
-      "50d": { "glyph": "lines", "color": "7FD9C6" },
-      "50n": { "glyph": "lines", "color": "518A7E" },
-    }
+      "01d": { "glyph": "sun", "color": "#FF834B" },
+      "01n": { "glyph": "moon", "color": "#3D62FF" },
+      "02d": { "glyph": "cloudy", "color": "#B7D6FF" },
+      "02n": { "glyph": "cloud", "color": "#9FBADE" },
+      "03d": { "glyph": "cloud2", "color": "#7CC1FF" },
+      "03n": { "glyph": "cloud2", "color": "#639ACC" },
+      "04d": { "glyph": "cloudy2", "color": "#5AB4FF" },
+      "04n": { "glyph": "cloudy2", "color": "#4385BD" },
+      "09d": { "glyph": "rainy", "color": "#4095FF" },
+      "09n": { "glyph": "rainy", "color": "#2C67B0" },
+      "10d": { "glyph": "rainy2", "color": "#3676FF" },
+      "10n": { "glyph": "rainy2", "color": "#244FAB" },
+      "11d": { "glyph": "lightning3", "color": "#6E7081" },
+      "11n": { "glyph": "lightning3", "color": "#50525E" },
+      "13d": { "glyph": "snowy3", "color": "#A2E0FF" },
+      "13n": { "glyph": "snowy3", "color": "#82B3CC" },
+      "50d": { "glyph": "lines", "color": "#7FD9C6" },
+      "50n": { "glyph": "lines", "color": "#s518A7E" },
+    };
     return weatherGlyph[icon];
   }
 
@@ -55,7 +55,7 @@ if (Meteor.isClient) {
         weather['humidity'] = data.main.humidity;
         weather['windSpeed'] = data.wind.speed;
         weather['windDir'] = data.wind.deg;
-        AmplifiedSession.set('weatherData', weather);
+        AmplifiedSession.set('weatherData', weather);        
         Router.go('wInfo');
       }).fail(function() {
           alert("error");
@@ -63,9 +63,15 @@ if (Meteor.isClient) {
     }
   });
 
+  Template.wInfo.rendered = function() {
+    var data = AmplifiedSession.get('weatherData');
+    $("body").css("background-color", data['color']);
+
+  };
+
   Template.wInfo.data = function() {
     return AmplifiedSession.get('weatherData')
-  }
+  };
 }
 
 if (Meteor.isServer) {
