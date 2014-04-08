@@ -40,7 +40,8 @@ if (Meteor.isClient) {
   var weather = {};
 
   Template.home.events({
-    'click #locationSubmit': function (evt, temp) {
+    'submit form': function (evt, temp) {
+      evt.preventDefault();
       var location = temp.find('#locationText').value;
       var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial';
       var weatherData = $.getJSON(url, function( data ){
