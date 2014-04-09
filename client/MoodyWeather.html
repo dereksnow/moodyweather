@@ -15,12 +15,11 @@
           <form class="form-inline" role="form">
             <div class="form-group">
               <label class="sr-only" for="locationText">Location</label>
-              <input type="text" class="form-control input-lg" id="locationText" size="43" placeholder="zip code (e.g. 33050) OR city,country (e.g. Perth,AU)">
+              <input type="text" class="form-control input-lg" id="locationText" size="43" placeholder="zip code (e.g. 36608) OR city,country (e.g. Perth,AU)">
               <input type="submit" id="locationSubmit" class="btn btn-default btn-lg" value="Submit">              
             </div>
-
-            
           </form>
+          <div class="bad-location">Not recognized as a valid zip code or city.</div>
       </div>
     </div> 
   </div>
@@ -31,6 +30,7 @@
     <div class="row">
       <i class="{{data.icon}} icon-md"></i>
     </div>
+      <span id="sounds">&#9835;</span>
     <div class="row">
       {{ data.location }}
     </div>      

@@ -9,8 +9,21 @@ body {
   color: #000;
 }
 
+#sounds {
+  cursor: pointer;
+  font-size: 50px
+}
+
+.bad-location {
+  display: none;
+}
+
 .icon-md {
   font-size: 100px;
+}
+
+.text-active {
+  text-shadow: #fdfdfd 0 0 20px;
 }
 
 .large-emphasis {
