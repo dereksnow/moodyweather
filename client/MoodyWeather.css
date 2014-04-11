@@ -1,3 +1,8 @@
+html, body {
+  height: 100%;
+  font-size: 62.5%; 
+}
+
 body {
   background-color: #72BBC9;
   color: #fdfdfd;
@@ -11,7 +16,10 @@ body {
 
 #sounds {
   cursor: pointer;
-  font-size: 50px
+}
+
+.sound-note {
+  font-size: 20px;
 }
 
 .bad-location {

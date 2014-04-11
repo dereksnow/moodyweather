@@ -28,9 +28,12 @@
 <template name="wInfo">
   <div class="container text-center weather-info">    
     <div class="row">
-      <i class="{{data.icon}} icon-md"></i>
-    </div>
-      <span id="sounds">&#9835;</span>
+      <div class="col-md-4 col-md-offset-4">
+        <i id="sounds" class="{{data.icon}} icon-md"></i>
+              <br/>
+      <span class="sound-note">click <i class="{{data.icon}}"></i> above for sounds.</span>
+      </div>   
+    </div>   
     <div class="row">
       {{ data.location }}
     </div>      
@@ -62,7 +65,7 @@
       </div>             
     </div>
     <div class="row">
-      Humidty {{ data.humidity }} %
+      Humidity {{ data.humidity }} %
     </div>
     <div class="row">
       Wind Speed {{ data.windSpeed }} miles/hr

@@ -96,6 +96,10 @@ if (Meteor.isClient) {
 
     var data = AmplifiedSession.get('weatherData');
     $("body").css("background-color", data['color']);
+    setTimeout(function(){ 
+      $('.sound-note').hide('slow');
+    },5000);
+
   };
 
   Template.wInfo.data = function() {
