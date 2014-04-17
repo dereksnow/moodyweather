@@ -1,5 +1,8 @@
 if (Meteor.isClient) {
 
+  var weather = {};
+  var redirect = false;
+
   // A version of Session that also store the key/value pair to local storage
   // using Amplify
   var AmplifiedSession = _.extend({}, Session, {
@@ -32,41 +35,59 @@ if (Meteor.isClient) {
       "13d": { "glyph": "snowy3", "sound": "snow", "color": "#A2E0FF" },
       "13n": { "glyph": "snowy3", "sound": "snow","color": "#82B3CC" },
       "50d": { "glyph": "lines", "sound": "spring", "color": "#7FD9C6" },
-      "50n": { "glyph": "lines", "sound": "spring", "color": "#s518A7E" },
+      "50n": { "glyph": "lines", "sound": "spring", "color": "#518A7E" },
     };
     return weatherGlyph[icon];
   }
 
-  var weather = {};
+  function getURL(location) {
+    return 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial';
+  }
+
+  function populateWeatherObj(url) {
+    var weatherData = $.getJSON(url, function( data ){
+      if (data.cod === 200){
+        var gylphColor = getWeatherGlyphColor(data.weather[0].icon);
+        weather['icon'] = "icon-" + gylphColor['glyph'];
+        weather['location'] = data.name;   
+        weather['description'] = data.weather[0].description;       
+        weather['tempCurr'] = data.main.temp;
+        weather['tempHi'] = data.main.temp_max;
+        weather['tempLow'] = data.main.temp_min;
+        weather['humidity'] = data.main.humidity;
+        weather['windSpeed'] = data.wind.speed;
+        weather['windDir'] = data.wind.deg;
+
+        var audioElement = document.createElement('audio');
+        audioElement.setAttribute('id', 'ambientSound');    
+        audioElement.setAttribute('src', '/sounds/' + gylphColor['sound'] + '.mp3');
+        audioElement.setAttribute('loop', true);
+        $( audioElement ).insertAfter( "#sounds" );
+        $("body").css("background-color", gylphColor['color']);
+        setTimeout(function(){ 
+          $('.sound-note').hide('slow');
+        },5000);
+
+
+        AmplifiedSession.set('weatherData', weather);
+        
+      }
+      else {
+        $('.bad-location').show();
+      }
+    }).fail(function() {
+        alert("failed to retrieve error");
+      });    
+  }
 
   Template.home.events({
     'submit form': function (evt, temp) {
       evt.preventDefault();
       var location = temp.find('#locationText').value;
-      var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial';
-      var weatherData = $.getJSON(url, function( data ){
-        if (data.cod === 200){
-          var gylphColor = getWeatherGlyphColor(data.weather[0].icon);
-          weather['icon'] = "icon-" + gylphColor['glyph'];
-          weather['color'] = gylphColor['color'];
-          weather['sound'] = gylphColor['sound'];
-          weather['location'] = data.name;   
-          weather['description'] = data.weather[0].description;       
-          weather['tempCurr'] = data.main.temp;
-          weather['tempHi'] = data.main.temp_max;
-          weather['tempLow'] = data.main.temp_min;
-          weather['humidity'] = data.main.humidity;
-          weather['windSpeed'] = data.wind.speed;
-          weather['windDir'] = data.wind.deg;
-          AmplifiedSession.set('weatherData', weather);        
-          Router.go('wInfo');
-        }
-        else {
-          $('.bad-location').show();
-        }
-      }).fail(function() {
-          alert("error");
-        });      
+      var url = getURL(location);
+      populateWeatherObj(url);
+      redirect = true;
+      Router.go('/wInfo/' + location);
     }
   });
 
@@ -86,20 +107,19 @@ if (Meteor.isClient) {
   })
 
 
-  Template.wInfo.rendered = function() {        
-    var audioElement = document.createElement('audio');
-    audioElement.setAttribute('id', 'ambientSound');
-    var data = AmplifiedSession.get('weatherData');
-    audioElement.setAttribute('src', 'sounds/' + data['sound'] + '.mp3');
-    audioElement.setAttribute('loop', true);
-    $( audioElement ).insertAfter( "#sounds" );
+  Template.home.rendered = function() {         
+    $("body").css("background-color", "#72BBC9");
+  };
 
-    var data = AmplifiedSession.get('weatherData');
-    $("body").css("background-color", data['color']);
-    setTimeout(function(){ 
-      $('.sound-note').hide('slow');
-    },5000);
-
+  Template.wInfo.rendered = function() {         
+    if (!redirect) {
+      redirect = false;
+      var current = Router.current();
+      var path = current && current.path;
+      var location = path.split("/")[2];
+      var url = getURL(location);
+      populateWeatherObj(url);
+    }
   };
 
   Template.wInfo.data = function() {
