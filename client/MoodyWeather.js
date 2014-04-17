@@ -40,11 +40,8 @@ if (Meteor.isClient) {
     return weatherGlyph[icon];
   }
 
-  function getURL(location) {
-    return 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial';
-  }
-
-  function populateWeatherObj(url) {
+  function populateWeatherObj(location) {
+    var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&units=imperial';
     var weatherData = $.getJSON(url, function( data ){
       if (data.cod === 200){
         var gylphColor = getWeatherGlyphColor(data.weather[0].icon);
@@ -67,13 +64,18 @@ if (Meteor.isClient) {
         setTimeout(function(){ 
           $('.sound-note').hide('slow');
         },5000);
-
-
         AmplifiedSession.set('weatherData', weather);
+        if (redirect) {
+          Router.go('/wInfo/' + location);
+        }
         
       }
       else {
-        $('.bad-location').show();
+        if (!redirect){
+          Router.go('error404');
+        }
+        $('.bad-location').show();        
+        
       }
     }).fail(function() {
         alert("failed to retrieve error");
@@ -84,10 +86,8 @@ if (Meteor.isClient) {
     'submit form': function (evt, temp) {
       evt.preventDefault();
       var location = temp.find('#locationText').value;
-      var url = getURL(location);
-      populateWeatherObj(url);
       redirect = true;
-      Router.go('/wInfo/' + location);
+      populateWeatherObj(location);
     }
   });
 
@@ -111,14 +111,17 @@ if (Meteor.isClient) {
     $("body").css("background-color", "#72BBC9");
   };
 
+  Template.error404.rendered = function() {         
+    $("body").css("background-color", "#FF4547");
+  };  
+
   Template.wInfo.rendered = function() {         
     if (!redirect) {
       redirect = false;
       var current = Router.current();
       var path = current && current.path;
       var location = path.split("/")[2];
-      var url = getURL(location);
-      populateWeatherObj(url);
+      populateWeatherObj(location);
     }
   };
 
